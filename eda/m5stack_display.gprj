@@ -8,6 +8,10 @@
         <File path="../atom_display/rtl/m5stack_hdmi/video_generator.v" type="file.verilog" enable="1"/>
         <File path="ip/SDRAM_controller_top_SIP/SDRAM_controller_top_SIP.v" type="file.verilog" enable="1"/>
         <File path="ip/sdram_rpll/sdram_rpll.v" type="file.verilog" enable="1"/>
+        <File path="src/framecounter_osd.v" type="file.verilog" enable="1"/>
+        <File path="src/delay_wgsr.v" type="file.verilog" enable="1"/>
+        <File path="src/hv_counter_valid.v" type="file.verilog" enable="1"/>
+        <File path="src/num_ROM.v" type="file.verilog" enable="1"/>
         <File path="src/top.sv" type="file.verilog" enable="1"/>
         <File path="src/spi2hdmi_jtag.cst" type="file.cst" enable="1"/>
         <File path="src/m5stack_display.sdc" type="file.sdc" enable="1"/>

@@ -92,7 +92,6 @@ module top (
     logic processor_is_busy;
     logic [$clog2(74_250_000)-1:0] led_counter = 0;
     logic data_enable; /* synthesis syn_keep=true */
-    assign RGB_DE = data_enable;
 
     assign HDMI_LED_B = led;
     assign HDMI_LED_W = processor_is_busy;
@@ -142,8 +141,32 @@ module top (
         .clkin(CLK_IN_50M) //input clkin
     );
 
-    wire [23:0] video_data;
-    assign RGB_OUT = video_data; //{video_data[15:11], 3'b0, video_data[10:5], 2'b0, video_data[4:0], 3'b0};
+    logic [23:0] video_data;
+    logic hsync;
+    logic vsync;
+    logic s5_data_enable;
+    logic s5_hsync;
+    logic s5_vsync;
+    logic [23:0] s5_video_data;
+    assign RGB_HSYNC = s5_hsync;
+    assign RGB_VSYNC = s5_vsync;
+    assign RGB_DE = s5_data_enable;
+    assign RGB_OUT = s5_video_data;
+
+    framecounter_osd framecounter_osd_i (
+        .i_clk		(clock_video),
+        .i_xres		(reset_n),
+        .i_en		(1'b1),
+        .i_bgr		(24'h00FF00),
+        .i0_data	(video_data),
+        .i0_de		(data_enable),
+        .i0_hs		(hsync),
+        .i0_vs		(vsync),
+        .o5_data	(s5_video_data),
+        .o5_de		(s5_data_enable),
+        .o5_hs		(s5_hsync),
+        .o5_vs		(s5_vsync)
+    );
 
     M5StackHDMI video_generator_i (
         .reset(!reset_n),
@@ -151,8 +174,8 @@ module top (
         .io_videoClock(clock_video),
         .io_videoReset(reset_video),
         .io_video_pixelData(video_data),
-        .io_video_hSync(RGB_HSYNC),
-        .io_video_vSync(RGB_VSYNC),
+        .io_video_hSync(hsync),
+        .io_video_vSync(vsync),
         .io_video_dataEnable(data_enable),
         .io_dataInSync(data_in_sync),
         .io_sdrc_selfRefresh(I_sdrc_selfrefresh),

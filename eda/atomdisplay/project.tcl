@@ -14,6 +14,10 @@ add_file -type verilog [file normalize ../../atom_display/rtl/m5stack_hdmi/video
 add_file -type verilog [file normalize ../ip/SDRAM_controller_top_SIP/SDRAM_controller_top_SIP.v]
 add_file -type verilog [file normalize ../ip/sdram_rpll/sdram_rpll.v]
 add_file -type verilog [file normalize ../src/top.sv]
+add_file -type verilog [file normalize ../src/framecounter_osd.v]
+add_file -type verilog [file normalize ../src/delay.v]
+add_file -type verilog [file normalize ../src/hv_counter.v]
+add_file -type verilog [file normalize ../src/number_rom.v]
 add_file -type cst [file normalize ../src/${base_name}.cst]
 add_file -type sdc [file normalize ../src/m5stack_display.sdc]
 
