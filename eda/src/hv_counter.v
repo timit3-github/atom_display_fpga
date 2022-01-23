@@ -16,32 +16,44 @@ module hv_counter #(
     output  wire  [p_hcnt - 1: 0] o2_hcnt,  // 水平カウンタ
     output  wire  [p_vcnt - 1: 0] o2_vcnt,  // 垂直カウンタ
     // 遅延信号出力
+    output  wire                  o2_hclr,
+    output  wire                  o2_vclr,
+    output  wire  [p_hcnt - 1: 0] o3_hcnt,
+    output  wire  [p_vcnt - 1: 0] o3_vcnt,
     output  wire                  o2_de,
     output  wire                  o5_de,
     output  wire                  o5_hs,
-    output  wire                  o5_vs
+    output  wire                  o5_vs,
+    output  wire                  o3_de,
+    output  wire                  o6_de,
+    output  wire                  o6_hs,
+    output  wire                  o6_vs
 );
 
     //--------------------------------------------------------------------------
     // 同期信号の遅延
     //--------------------------------------------------------------------------
-    reg     [5:1]   d_de;
-    reg     [5:1]   d_hs;
-    reg     [5:1]   d_vs;
+    reg     [6:1]   d_de;
+    reg     [6:1]   d_hs;
+    reg     [6:1]   d_vs;
     always @(posedge i_clk)
         if (!i_xres) begin
-            d_de[5:1] <= 0;
-            d_hs[5:1] <= 0;
-            d_vs[5:1] <= 0;
+            d_de[6:1] <= 0;
+            d_hs[6:1] <= 0;
+            d_vs[6:1] <= 0;
         end else begin
-            d_de[5:1] <= {d_de[4:1], i0_de};
-            d_hs[5:1] <= {d_hs[4:1], i0_hs};
-            d_vs[5:1] <= {d_vs[4:1], i0_vs};
+            d_de[6:1] <= {d_de[5:1], i0_de};
+            d_hs[6:1] <= {d_hs[5:1], i0_hs};
+            d_vs[6:1] <= {d_vs[5:1], i0_vs};
         end
     assign o2_de = d_de[2];
     assign o5_de = d_de[5];
     assign o5_hs = d_hs[5];
     assign o5_vs = d_vs[5];
+    assign o3_de = d_de[3];
+    assign o6_de = d_de[6];
+    assign o6_hs = d_hs[6];
+    assign o6_vs = d_vs[6];
 
     //--------------------------------------------------------------------------
     // de信号の立ち上がりエッジを検出
@@ -110,6 +122,28 @@ module hv_counter #(
         else if (d1_hclr == 1)
             d2_vcnt <= d2_vcnt + {{p_vcnt - 1{1'b0}}, 1'b1};
     assign o2_vcnt = d2_vcnt;
+
+    reg             d2_hclr;
+    reg             d2_vclr;
+    reg     [p_hcnt - 1: 0] d3_hcnt;
+    reg     [p_vcnt - 1: 0] d3_vcnt;
+    always @(posedge i_clk)
+        if (!i_xres) begin
+            d2_hclr <= 0;
+            d2_vclr <= 0;
+            d3_hcnt <= 0;
+            d3_vcnt <= 0;
+        end else begin
+            d2_hclr <= d1_hclr;
+            d2_vclr <= d1_vclr;
+            d3_hcnt <= d2_hcnt;
+            d3_vcnt <= d2_vcnt;
+        end
+    assign o2_hclr = d2_hclr;
+    assign o2_vclr = d2_vclr;
+    assign o3_hcnt = d3_hcnt;
+    assign o3_vcnt = d3_vcnt;
+
 
 endmodule
 `default_nettype wire

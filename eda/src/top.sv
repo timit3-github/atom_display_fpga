@@ -153,7 +153,10 @@ module top (
     assign RGB_DE = s5_data_enable;
     assign RGB_OUT = s5_video_data;
 
-    framecounter_osd framecounter_osd_i (
+    framecounter_osd #(
+        .p_hpos     (5),    // フレームカウンタの表示x座標
+        .p_vpos     (5)     // フレームカウンタの表示y座標
+    ) framecounter_osd_i (
         .i_clk		(clock_video),
         .i_xres		(reset_n),
         .i_en		(1'b1),
@@ -162,10 +165,10 @@ module top (
         .i0_de		(data_enable),
         .i0_hs		(hsync),
         .i0_vs		(vsync),
-        .o5_data	(s5_video_data),
-        .o5_de		(s5_data_enable),
-        .o5_hs		(s5_hsync),
-        .o5_vs		(s5_vsync)
+        .o6_data	(s5_video_data),
+        .o6_de		(s5_data_enable),
+        .o6_hs		(s5_hsync),
+        .o6_vs		(s5_vsync)
     );
 
     M5StackHDMI video_generator_i (
